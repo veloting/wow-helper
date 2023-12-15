@@ -15,8 +15,6 @@ from win32process import EnumProcessModules, GetModuleFileNameEx, GetWindowThrea
 
 from conf.CONFIG import *
 from core import WowNotRunError, WowKeeperError, ShootError, WowKeeperValueError
-from core.image_compare import ComparePicture
-from core.ocr import OcrClientBaiDu
 
 
 class KeyClient:
@@ -36,7 +34,7 @@ class KeyClient:
                         'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
     def __init__(self, *args, **kwargs):
-        super(KeyClient, self).__init__(*args, **kwargs)
+        return
 
     def press_key(self, key_letter, extend_key=(0, 0, 0)):
         """
@@ -296,7 +294,7 @@ class WowActionFactory(KeyClient):
                                              callable(target) and target_name.startswith('action')]))()
 
 
-class WowClientGuard(WowActionFactory, ComparePicture, OcrClientBaiDu):
+class WowClientGuard(WowActionFactory):
     """
     防掉线
     """
