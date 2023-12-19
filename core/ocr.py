@@ -1,5 +1,5 @@
 from aip import AipOcr
-from conf.CONFIG import *
+from core import *
 
 
 class OcrClientBaiDu:
