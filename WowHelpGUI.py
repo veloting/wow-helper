@@ -7,6 +7,7 @@ import wx.adv
 
 from core.wow_helper import WowClientGuard
 from conf.CONFIG import *
+from core.image_compare import ComparePicture
 
 WELCOME_TEXT = '一区德姆塞卡尔《阿拉索帝国》公会友情提供，欢迎各位朋友加入！'
 ALPHA_ONLY = 1

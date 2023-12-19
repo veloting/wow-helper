@@ -15,7 +15,8 @@ from win32process import EnumProcessModules, GetModuleFileNameEx, GetWindowThrea
 
 from conf.CONFIG import *
 from core import WowNotRunError, WowKeeperError, ShootError, WowKeeperValueError
-
+from core.image_compare import ComparePicture
+from core.ocr import OcrClientBaiDu
 
 class KeyClient:
     """
@@ -294,7 +295,7 @@ class WowActionFactory(KeyClient):
                                              callable(target) and target_name.startswith('action')]))()
 
 
-class WowClientGuard(WowActionFactory):
+class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
     """
     防掉线
     """
