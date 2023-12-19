@@ -11,6 +11,7 @@ SHOOT_BOX_POS = (0, 0, 1009, 720)
 SHOOT_BOX_POS = (0, 31, 1009, 720)
 SHOOT_FILE_NAME = 'shoot.png'
 
+
 # if bool(windll.kernel32.SetConsoleTextAttribute(__out, 0x7)) or not IS_DEV:
 
 
@@ -38,6 +39,8 @@ SERVICE_REFRESH_SAMPLE_FILE_NAME = (resource_path(os.path.join('res', 'refresh_s
 # 服务器登录样本图片
 SERVICE_LOGIN_SAMPLE_FILE_NAME = (resource_path(os.path.join('res', 'login_service_sample.png')),
                                   resource_path(os.path.join('res', 'login_service_sample_2.png')))
+# 服务器战斗中
+SERVICE_IN_BATTLE_SAMPLE_FILE_NAME = resource_path(os.path.join('res', 'in_battle.png'))
 
 # 账号未认证样本图片
 UNAUTH_SAMPLE_FILE_NAME = (resource_path(os.path.join('res', 'unauth_sample.png')),
@@ -56,10 +59,19 @@ SERVICE_WATING_BOX_POS = (345, 275, 745, 453)
 # 服务器选择截图区域
 # CHANNEL_BOX_POS = (225, 160, 785, 625)
 CHANNEL_BOX_POS = (225, 129, 785, 594)
+# 战场选择截图区域
+# CHANNEL_BOX_POS = (225, 160, 785, 625)
+SERVICE_IN_BATTLE_BOX_POS = (873, 133, 900, 160)
 # 战网登录WOW位置
 BATTLE_LOGIN_POS = (300, 700)
 # wow角色进入位置
 ROLE_LOGIN_POS = (450, 711)
+# 申请战场
+BATTLE_APPLY_POS = (196, 528)
+# 进入战场
+BATTLE_ENTRY_POS = (433, 213)
+# 退出战场
+BATTLE_EXIT_POS = (509, 556)
 # 默认值
 SLEEP_MIN_TIME_DEFAULT = 180
 SLEEP_MAX_TIME_DEFAULT = 300
@@ -83,4 +95,3 @@ PARAM_DEFAULT_DICT = {'skills': SKILLS_DEFAULT,
                       'api_key': '',
                       'scret_key': ''
                       }
-

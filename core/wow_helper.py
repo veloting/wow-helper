@@ -17,6 +17,7 @@ from conf.CONFIG import *
 from core import WowNotRunError, WowKeeperError, ShootError, WowKeeperValueError
 from core.image_compare import ComparePicture
 from core.ocr import OcrClientBaiDu
+import pyautogui
 
 class KeyClient:
     """
@@ -312,6 +313,7 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
     SCENE_SERVICE_WATING = 12
     SCENE_SERVICE_CONNECT = 13
     SCENE_SERVICE_LOGIN = 14
+    SCENE_SERVICE_BATTLE = 15
     SCENE_PARAMS = {'offline': {'scene_name': '已从服务器断开', 'sample_file': OFFLINE_SAMPLE_FILE_NAME,
                                 'scene_id': SCENE_OFFLINE, 'shoot_position': OFFLINE_BOX_POS,
                                 'text': ['已从服务器断开WOW519000319', '确定']},
@@ -339,7 +341,9 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
                                'scene_id': SCENE_UNAUTH, 'shoot_position': SERVICE_LOGIN_BOX_POS,
                                'text': ['账号名称']},
                     'in_game': {'scene_name': '游戏中'},
-                    'not_running': {'scene_name': '未启动', 'scene_id': SCENE_NOT_RUNNING}
+                    'not_running': {'scene_name': '未启动', 'scene_id': SCENE_NOT_RUNNING},
+                    'in_battle': {'scene_name': '战场中', 'sample_file': SERVICE_IN_BATTLE_SAMPLE_FILE_NAME,
+                                   'scene_id': SCENE_SERVICE_BATTLE, 'shoot_position': SERVICE_IN_BATTLE_BOX_POS},
                     }
 
     def __init__(self, skills, is_random_action=True, is_warning=False, is_auto_login=False, login_loadtime=10,
@@ -464,7 +468,7 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
 
     @check_stop_siginal
     def get_wow_scene(self, check_scene=[value.get('scene_id', -1) for key, value in SCENE_PARAMS.items()],
-                      check_type=2):
+                      check_type=1):
         """
         检测当前游戏场景
         :param: check_type 1 图片识别 2 ocr识别
@@ -575,6 +579,11 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
                 self.log_function(
                     '%s: 检测到游戏在角色登录界面(匹配度%f)' % (self.systime, scene_value))
                 self.login_role()
+                deal_flag = self.IS_FINISH
+        elif scene_name == 'in_battle' and self.SCENE_SERVICE_BATTLE in deal_scenes:
+            if scene_value >= self.compare_value:
+                self.log_function(
+                    '%s: 检测到游戏在战场中(匹配度%f)' % (self.systime, scene_value))
                 deal_flag = self.IS_FINISH
         elif scene_name == 'channel' and self.SCENE_CHANNEL_CHOICE in deal_scenes:
             pass
@@ -718,6 +727,17 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
                             next_check_scene_time = time.time() + self.check_offline_interval
                             if is_deal:
                                 break
+
+                            a, b, is_deal = self.deal_scene(
+                                deal_scenes=[self.SCENE_SERVICE_BATTLE])
+                            print(f'battle is_deal {is_deal}')
+                            if is_deal:
+                                pyautogui.leftClick(BATTLE_ENTRY_POS)
+                                pyautogui.leftClick(BATTLE_EXIT_POS)
+                            else:
+                                self.press_key_to_wow('H')
+                                pyautogui.leftClick(BATTLE_APPLY_POS)
+
                         except ShootError:
                             time.sleep(1)
                     time.sleep(1)
