@@ -624,13 +624,16 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
         self.log_function('%s: 通过战网启动游戏！' % (self.systime,))
         keybd_event(17, 0, 0, 0)
         keybd_event(17, 0, KEYEVENTF_KEYUP, 0)
-        battle_win_id = FindWindow('Qt5QWindowOwnDCIcon', '暴雪战网')
-        if not battle_win_id:
-            self.log_function('%s: 未检测到战网运行，请检查是否未启动或被最小化到系统托盘！' % (self.systime,),
-                              0, '未检测到战网运行，请检查是否未启动或被最小化到系统托盘')
-            raise WowKeeperError('未查找战网窗口句柄')
-            self.stop()
-        self.press_key_to_window('ENTER', battle_win_id)
+        # battle_win_id = FindWindow('Qt5QWindowOwnDCIcon', '暴雪战网')
+        # if not battle_win_id:
+        #     self.log_function('%s: 未检测到战网运行，请检查是否未启动或被最小化到系统托盘！' % (self.systime,),
+        #                       0, '未检测到战网运行，请检查是否未启动或被最小化到系统托盘')
+        #     raise WowKeeperError('未查找战网窗口句柄')
+        #     self.stop()
+        # self.press_key_to_window('ENTER', battle_win_id)
+
+        # 此处特殊处理逻辑
+        pyautogui.leftClick(160, 790)
         out_time = time.time() + 30
         while not self.wow_is_running and self._run_mode == self.DO_ALL:
             time.sleep(0.1)
@@ -736,6 +739,9 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
                                 pyautogui.leftClick(BATTLE_EXIT_POS)
                             else:
                                 self.press_key_to_wow('H')
+                                time.sleep(1)
+                                pyautogui.leftClick(101,554)
+                                time.sleep(1)
                                 pyautogui.leftClick(BATTLE_APPLY_POS)
 
                         except ShootError:
