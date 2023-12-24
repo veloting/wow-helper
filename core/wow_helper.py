@@ -219,11 +219,11 @@ class WowActionFactory(KeyClient):
     @check_stop_siginal
     def _action_forward_start(self):
         self.log_function('%s: 执行"前进"指令' % datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-        self.press_key_to_wow(key_letter='W', press_type=1)
+        # self.press_key_to_wow(key_letter='W', press_type=1)
 
     def _action_forward_stop(self):
         self.log_function('%s: 执行"停止前进"指令' % datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-        self.press_key_to_wow(key_letter='W', press_type=2)
+        #self.press_key_to_wow(key_letter='W', press_type=2)
 
     @check_stop_siginal
     def _action_backward_start(self):
@@ -243,7 +243,8 @@ class WowActionFactory(KeyClient):
     def action_forward(self):
         keep_down_time = randint(1, 5)
         self.log_function('%s: 执行"前进"指令%d秒' % (self.systime, keep_down_time))
-        self.press_key_to_wow('W', press_down_time=keep_down_time)
+        # self.press_key_to_wow('W', press_down_time=keep_down_time)
+        self.press_key_to_wow('S', press_down_time=keep_down_time)
 
     @check_stop_siginal
     def action_backward(self):
@@ -741,8 +742,8 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
                                 self.press_key_to_wow('H')
                                 time.sleep(1)
                                 pyautogui.leftClick(101,554)
-                                time.sleep(1)
                                 pyautogui.leftClick(BATTLE_APPLY_POS)
+                                pyautogui.leftClick()
 
                         except ShootError:
                             time.sleep(1)
