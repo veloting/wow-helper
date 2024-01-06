@@ -736,6 +736,7 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
                                 deal_scenes=[self.SCENE_SERVICE_BATTLE])
                             print(f'battle is_deal {is_deal}')
                             if is_deal:
+                                pyautogui.leftClick(500,205)
                                 pyautogui.leftClick(BATTLE_ENTRY_POS)
                                 pyautogui.leftClick(BATTLE_EXIT_POS)
                             else:
