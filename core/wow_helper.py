@@ -19,6 +19,7 @@ from core.image_compare import ComparePicture
 from core.ocr import OcrClientBaiDu
 import pyautogui
 
+
 class KeyClient:
     """
     键盘控制客户端
@@ -37,6 +38,11 @@ class KeyClient:
 
     def __init__(self, *args, **kwargs):
         return
+
+    def press_mouse(self, x=None, y=None):
+        pyautogui.moveTo(x, y)
+        pyautogui.leftClick(x, y)
+        pyautogui.leftClick()
 
     def press_key(self, key_letter, extend_key=(0, 0, 0)):
         """
@@ -159,6 +165,7 @@ class WowActionFactory(KeyClient):
             if self._run_mode != self.DO_NOTING:
                 func_result = func(self, *args, **kwargs)
                 return func_result
+
         return wrapper
 
     @staticmethod
@@ -223,7 +230,7 @@ class WowActionFactory(KeyClient):
 
     def _action_forward_stop(self):
         self.log_function('%s: 执行"停止前进"指令' % datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-        #self.press_key_to_wow(key_letter='W', press_type=2)
+        # self.press_key_to_wow(key_letter='W', press_type=2)
 
     @check_stop_siginal
     def _action_backward_start(self):
@@ -240,20 +247,20 @@ class WowActionFactory(KeyClient):
         self.press_key_to_wow('BACKSPACE', randint(10, 50) / 100)
 
     @check_stop_siginal
-    def action_forward(self):
+    def _action_forward(self):
         keep_down_time = randint(1, 5)
         self.log_function('%s: 执行"前进"指令%d秒' % (self.systime, keep_down_time))
         # self.press_key_to_wow('W', press_down_time=keep_down_time)
         self.press_key_to_wow('S', press_down_time=keep_down_time)
 
     @check_stop_siginal
-    def action_backward(self):
+    def _action_backward(self):
         keep_down_time = randint(1, 5)
         self.log_function('%s: 执行"后退"指令%d秒' % (self.systime, keep_down_time))
         self.press_key_to_wow('S', press_down_time=keep_down_time)
 
     @check_stop_siginal
-    def action_forward_skill(self):
+    def _action_forward_skill(self):
         self._action_forward_start()
         time.sleep(randint(10, 50) / 100)
         self.action_skill()
@@ -261,7 +268,7 @@ class WowActionFactory(KeyClient):
         self._action_forward_stop()
 
     @check_stop_siginal
-    def action_backward_skill(self):
+    def _action_backward_skill(self):
         self._action_backward_start()
         time.sleep(randint(10, 50) / 100)
         self.action_skill()
@@ -269,7 +276,7 @@ class WowActionFactory(KeyClient):
         self._action_backward_stop()
 
     @check_stop_siginal
-    def action_forward_jump(self):
+    def _action_forward_jump(self):
         self._action_forward_start()
         time.sleep(randint(10, 50) / 100)
         self.action_jump()
@@ -277,7 +284,7 @@ class WowActionFactory(KeyClient):
         self._action_forward_stop()
 
     @check_stop_siginal
-    def action_backward_jump(self):
+    def _action_backward_jump(self):
 
         self._action_backward_start()
         time.sleep(randint(10, 50) / 100)
@@ -297,7 +304,7 @@ class WowActionFactory(KeyClient):
                                              callable(target) and target_name.startswith('action')]))()
 
 
-class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
+class WowClientGuard(WowActionFactory, ComparePicture, OcrClientBaiDu):
     """
     防掉线
     """
@@ -318,7 +325,7 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
     SCENE_PARAMS = {'offline': {'scene_name': '已从服务器断开', 'sample_file': OFFLINE_SAMPLE_FILE_NAME,
                                 'scene_id': SCENE_OFFLINE, 'shoot_position': OFFLINE_BOX_POS,
                                 'text': ['已从服务器断开WOW519000319', '确定']},
-                                # 'text': ['你已断开连接(W51900308)', '帐名称', '帮助', '确定']},
+                    # 'text': ['你已断开连接(W51900308)', '帐名称', '帮助', '确定']},
                     # TODO: 还有一种正常掉线 ['你已断开连接(W51900308)', '帐名称', '帮助', '确定']
                     'role_login': {'scene_name': '角色登录', 'sample_file': ROLE_SAMPLE_FILE_NAME,
                                    'scene_id': SCENE_ROLE_LOGIN, 'shoot_position': ROLE_LOGIN_BOX_POS,
@@ -332,7 +339,8 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
                     'serv_wait': {'scene_name': '服务器排队等待', 'sample_file': SERVICE_WATING_SAMPLE_FILE_NAME,
                                   'scene_id': SCENE_SERVICE_WATING, 'shoot_position': SERVICE_WATING_BOX_POS,
                                   'text': ['德姆塞卡尔巳满', '队列位置', '预计时间'], 'check_ln': (1, 2)},
-                    'serv_refresh': {'scene_name': '正在刷新服务器列表', 'sample_file': SERVICE_REFRESH_SAMPLE_FILE_NAME,
+                    'serv_refresh': {'scene_name': '正在刷新服务器列表',
+                                     'sample_file': SERVICE_REFRESH_SAMPLE_FILE_NAME,
                                      'scene_id': SCENE_SERVICE_REFRESH, 'shoot_position': SERVICE_REFRESH_BOX_POS,
                                      'text': ['正在刷新服务器列表', '取消']},
                     'serv_login': {'scene_name': '正在登陆服务器', 'sample_file': SERVICE_LOGIN_SAMPLE_FILE_NAME,
@@ -344,7 +352,7 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
                     'in_game': {'scene_name': '游戏中'},
                     'not_running': {'scene_name': '未启动', 'scene_id': SCENE_NOT_RUNNING},
                     'in_battle': {'scene_name': '战场中', 'sample_file': SERVICE_IN_BATTLE_SAMPLE_FILE_NAME,
-                                   'scene_id': SCENE_SERVICE_BATTLE, 'shoot_position': SERVICE_IN_BATTLE_BOX_POS},
+                                  'scene_id': SCENE_SERVICE_BATTLE, 'shoot_position': SERVICE_IN_BATTLE_BOX_POS},
                     }
 
     def __init__(self, skills, is_random_action=True, is_warning=False, is_auto_login=False, login_loadtime=10,
@@ -465,6 +473,7 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
             if self._run_mode != self.DO_NOTING:
                 func_result = func(self, *args, **kwargs)
                 return func_result
+
         return wrapper
 
     @check_stop_siginal
@@ -536,7 +545,7 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
                         tmp_scene_value.append(difflib.SequenceMatcher(None, sample_text, ocr_text[seq]).quick_ratio())
                     except IndexError:
                         tmp_scene_value.append(0)
-                value = sum(tmp_scene_value)/len(tmp_scene_value)
+                value = sum(tmp_scene_value) / len(tmp_scene_value)
                 if value > scene_value:
                     scene_name = scene
                     scene_value = value
@@ -567,7 +576,8 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
                 check_network_sleep_time = 10
                 while os.system('ping www.baidu.com'):
                     self.log_function(
-                        '%s: 检测到网络异常导致游戏登录未账号认证，请确认网络是否正常，%d秒后重试!' % (self.systime, check_network_sleep_time),
+                        '%s: 检测到网络异常导致游戏登录未账号认证，请确认网络是否正常，%d秒后重试!' % (
+                        self.systime, check_network_sleep_time),
                         0, '检测到网络异常导致游戏登录未账号认证，请确认网络是否正常!')
                     time.sleep(check_network_sleep_time)
                 self.log_function(
@@ -623,15 +633,15 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
         """
         self.IS_STARTING = True
         self.log_function('%s: 通过战网启动游戏！' % (self.systime,))
-        keybd_event(17, 0, 0, 0)
-        keybd_event(17, 0, KEYEVENTF_KEYUP, 0)
-        # battle_win_id = FindWindow('Qt5QWindowOwnDCIcon', '暴雪战网')
-        # if not battle_win_id:
-        #     self.log_function('%s: 未检测到战网运行，请检查是否未启动或被最小化到系统托盘！' % (self.systime,),
-        #                       0, '未检测到战网运行，请检查是否未启动或被最小化到系统托盘')
-        #     raise WowKeeperError('未查找战网窗口句柄')
-        #     self.stop()
-        # self.press_key_to_window('ENTER', battle_win_id)
+        # keybd_event(17, 0, 0, 0)
+        # keybd_event(17, 0, KEYEVENTF_KEYUP, 0)
+        battle_win_id = FindWindow('Chrome_WidgetWin_0', '战网')
+        if not battle_win_id:
+            self.log_function('%s: 未检测到战网运行，请检查是否未启动或被最小化到系统托盘！' % (self.systime,),
+                              0, '未检测到战网运行，请检查是否未启动或被最小化到系统托盘')
+            raise WowKeeperError('未查找战网窗口句柄')
+            self.stop()
+        self.press_key_to_window('ENTER', battle_win_id)
 
         # 此处特殊处理逻辑
         pyautogui.leftClick(160, 790)
@@ -706,7 +716,8 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
             self._run_mode = self.DO_ALL
             self.log_function('-' * 100)
             self.log_function('%s: 开始启动防掉线助手' % (self.systime,))
-            self.log_function(f'动作循环间隔随机范围: {sleep_time_range[0]}秒-{sleep_time_range[1]}秒,按键列表为: {self.skills}')
+            self.log_function(
+                f'动作循环间隔随机范围: {sleep_time_range[0]}秒-{sleep_time_range[1]}秒,按键列表为: {self.skills}')
             self.log_function(
                 f'掉线提醒开关状态：{self.is_warning}, 掉线检查间隔: {self.check_offline_interval}秒, '
                 f'游戏自动登录开关状态: {self.is_auto_login},\n 自动清理文件: {self.clear_shoot_file}, 沉浸模式开关状态: {self.hiden_mode}')
@@ -736,15 +747,15 @@ class WowClientGuard(WowActionFactory,ComparePicture, OcrClientBaiDu):
                                 deal_scenes=[self.SCENE_SERVICE_BATTLE])
                             print(f'battle is_deal {is_deal}')
                             if is_deal:
-                                pyautogui.leftClick(500,205)
-                                pyautogui.leftClick(BATTLE_ENTRY_POS)
-                                pyautogui.leftClick(BATTLE_EXIT_POS)
+                                self.press_mouse(500, 205)
+                                self.press_mouse(BATTLE_EXIT_POS)
+                                self.press_mouse(BATTLE_ENTRY_POS)
                             else:
                                 self.press_key_to_wow('H')
                                 time.sleep(1)
-                                pyautogui.leftClick(101,554)
-                                pyautogui.leftClick(BATTLE_APPLY_POS)
-                                pyautogui.leftClick()
+                                self.press_mouse(101, 554)
+                                self.press_mouse(89, 259)
+                                self.press_mouse(BATTLE_APPLY_POS)
 
                         except ShootError:
                             time.sleep(1)
